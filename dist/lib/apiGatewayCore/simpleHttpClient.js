@@ -62,13 +62,10 @@ simpleHttpClientFactory.newClient = config => {
     }
 
     let body = utils.copy(request.body);
-    if (body === undefined) {
-      body = '';
-    }
 
     let url = config.endpoint + path;
     let queryString = buildCanonicalQueryString(queryParams);
-    if (queryString != '') {
+    if (queryString !== '') {
       url += '?' + queryString;
     }
 

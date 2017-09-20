@@ -58,7 +58,7 @@ const utils = {
     return false;
   },
   copy: function (obj) {
-    if (null == obj || 'object' != typeof obj) return obj;
+    if (null === obj || 'object' !== typeof obj) return obj;
     let copy = obj.constructor();
     let attr = null;
     for (attr in obj) {
@@ -67,7 +67,7 @@ const utils = {
     return copy;
   },
   mergeInto: function (baseObj, additionalProps) {
-    if (null == baseObj || 'object' != typeof baseObj) return baseObj;
+    if (null === baseObj || 'object' !== typeof baseObj) return baseObj;
     let merged = baseObj.constructor();
     let attr = null;
     for (attr in baseObj) {

@@ -77,9 +77,15 @@ sigV4ClientFactory.newClient = function(config) {
     let canonicalQueryString = '';
     for (let i = 0; i < sortedQueryParams.length; i++) {
       canonicalQueryString += sortedQueryParams[i]
-        + '=' + encodeURIComponent(queryParams[sortedQueryParams[i]]) + '&';
+        + '=' + fixedEncodeURIComponent(queryParams[sortedQueryParams[i]]) + '&';
     }
     return canonicalQueryString.substr(0, canonicalQueryString.length - 1);
+  }
+
+  function fixedEncodeURIComponent(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+      return '%' + c.charCodeAt(0).toString(16);
+    });
   }
 
   function buildCanonicalHeaders(headers) {
@@ -173,10 +179,8 @@ sigV4ClientFactory.newClient = function(config) {
     }
 
     let body = utils.copy(request.body);
-    // override request body and set to empty when signing GET requests
-    if (body === undefined || verb === 'GET') {
-      body = '';
-    } else {
+    // stringify request body
+    if (body) {
       body = JSON.stringify(body);
     }
 
@@ -219,7 +223,7 @@ sigV4ClientFactory.newClient = function(config) {
 
     let url = config.endpoint + path;
     let queryString = buildCanonicalQueryString(queryParams);
-    if (queryString != '') {
+    if (queryString !== '') {
       url += '?' + queryString;
     }
 
@@ -230,14 +234,14 @@ sigV4ClientFactory.newClient = function(config) {
 
     let signedRequest = {
       headers: headers,
-      data: body,
+      data: body
     };
     if (config.retries !== undefined) {
       signedRequest.baseURL = url;
       let client = axios.create(signedRequest);
       axiosRetry(client, {
         retries: config.retries,
-        retryCondition: config.retryCondition,
+        retryCondition: config.retryCondition
       });
       return client.request({method: verb});
     }

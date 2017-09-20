@@ -31,7 +31,7 @@ apigClientFactory.newClient = (config) => {
       apiKey: undefined,
       invokeUrl: '',
       service: '',
-      defaultContentType: 'application/json',
+      defaultContentType: 'application/json; charset=utf-8',
       defaultAcceptType: 'application/json',
       systemClockOffset: 0,
     };
@@ -56,7 +56,7 @@ apigClientFactory.newClient = (config) => {
   }
   // If defaultContentType is not defined then default to application/json
   if (typeof config.defaultContentType === 'undefined') {
-    config.defaultContentType = 'application/json';
+    config.defaultContentType = 'application/json; charset=utf-8';
   }
   // If defaultAcceptType is not defined then default to application/json
   if (typeof config.defaultAcceptType === 'undefined') {
